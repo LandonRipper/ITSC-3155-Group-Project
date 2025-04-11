@@ -14,4 +14,5 @@ class MenuItems(Base):
 
     recipes = relationship("Recipe", back_populates="item")
     order_details = relationship("OrderDetail", back_populates="item")
+    feedback = relationship("Feedback", back_populates="item", cascade="all, delete-orphan")
 
