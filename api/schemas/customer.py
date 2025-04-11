@@ -23,7 +23,7 @@ class CustomerRead(CustomerBase):
     class Config:
         orm_mode = True
 
-class Customer(CustomerBase):
+class Customer(BaseModel):
     name: str
     email: str
     phone_number: str
