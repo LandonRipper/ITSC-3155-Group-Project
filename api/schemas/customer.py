@@ -18,6 +18,15 @@ class CustomerUpdate(BaseModel):
 
 class CustomerRead(CustomerBase):
     id: int
+    class Config:
+        orm_mode = True
+
+class Customer(BaseModel):
+    name: str
+    email: str
+    phone_number: str
+    address: str
+
     class ConfigDict:
         orm_mode = True
 
