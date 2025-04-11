@@ -12,16 +12,13 @@ class CustomerBase(BaseModel):
 class CustomerCreate(CustomerBase):
     pass
 
+class CustomerUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    phone_number: Optional[str] = None
+    address: Optional[str] = None
+
 class CustomerRead(CustomerBase):
     id: int
-    class Config:
-        orm_mode = True
-
-class Customer(CustomerBase):
-    name: str
-    email: str
-    phone_number: str
-    address: str
-
     class ConfigDict:
         orm_mode = True
