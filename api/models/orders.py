@@ -16,3 +16,4 @@ class Order(Base):
 
     customer_id = Column(Integer, ForeignKey("customers.id"))
     customer = relationship("Customer", back_populates="orders")
+    payment = relationship("Payment", back_populates="orders", uselist=False)
