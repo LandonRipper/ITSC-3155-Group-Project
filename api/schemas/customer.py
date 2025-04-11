@@ -22,3 +22,13 @@ class CustomerRead(CustomerBase):
     id: int
     class ConfigDict:
         orm_mode = True
+
+class Customer(BaseModel):
+    id: int
+    name: str
+    email: str
+    phone_number: str
+    address: str
+    class ConfigDict:
+        orm_mode = True
+        

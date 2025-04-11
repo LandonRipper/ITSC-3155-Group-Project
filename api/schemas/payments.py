@@ -20,3 +20,9 @@ class PaymentUpdate(BaseModel):
     card_info: Optional[str] = None
     transaction_status: Optional[str] = None
     payment_type: Optional[str] = None
+
+class Payment(PaymentBase):
+    id: int
+    order_id: int
+    class ConfigDict:
+        orm_mode = True
