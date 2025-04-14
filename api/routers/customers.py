@@ -18,15 +18,15 @@ def read_all():
     return
 
 
-@router.get("/{customer_id}", response_model=schema.Customer)
+@router.get("/{id}", response_model=schema.Customer)
 def read_one():
     return
 
 
-@router.put("/{customer_id}", response_model=schema.Customer)
+@router.put("/{id}", response_model=schema.Customer)
 def update():
     return
 
-@router.delete("/{customer_id}")
+@router.delete("/{id}")
 def delete():
     return 
