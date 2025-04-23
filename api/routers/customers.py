@@ -1,3 +1,5 @@
+from http.client import HTTPException
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..controllers import customers as controller
@@ -26,6 +28,10 @@ def read_one():
 def update():
     return
 
-@router.delete("/{id}")
-def delete():
-    return 
+@router.delete("/{customer_id}", tags=["Customers"])
+def delete(customer_id: int, db: Session = Depends(get_db)):
+    customer = customer_controller.read_one(db, customer_id=customer_id)
+    if customer is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return customer_controller.delete(db=db, customer_id=customer_id)
+

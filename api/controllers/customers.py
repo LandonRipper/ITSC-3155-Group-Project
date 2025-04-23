@@ -53,13 +53,7 @@ def update(db: Session, customer_id: int, request):
 
 
 def delete(db: Session, customer_id: int):
-    try:
-        customer = db.query(model.Customer).filter(model.Customer.id == customer_id)
-        if not customer.first():
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer ID not found!")
-        customer.delete(synchronize_session=False)
-        db.commit()
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    db_order  = db.query(model.Customer).filter(model.Customer.id == customer_id)
+    db_order.delete(synchronize_session=False)
+    db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
