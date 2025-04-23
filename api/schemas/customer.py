@@ -27,6 +27,6 @@ class Customer(BaseModel):
     phone_number: str
     address: str
 
-    class ConfigDict:
+    class Config:
         orm_mode = True
 

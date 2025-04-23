@@ -11,7 +11,7 @@ class Feedback(Base):
     review = Column(Text, nullable=True)
     menu_item_id = Column(Integer, ForeignKey("menu_items.id"), nullable=False)
 
-    item = relationship("MenuItems", back_populates="feedback")
+    item = relationship("MenuItem", back_populates="feedback")
 
     __table_args__ = (
         CheckConstraint('rating >= 1 AND rating <= 5', name='check_rating_range'),

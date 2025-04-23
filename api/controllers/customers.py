@@ -12,14 +12,9 @@ def create(db: Session, request):
         address=request.address
     )
 
-    try:
-        db.add(new_customer)
-        db.commit()
-        db.refresh(new_customer)
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
-
+    db.add(new_customer)
+    db.commit()
+    db.refresh(new_customer)
     return new_customer
 
 
