@@ -4,7 +4,10 @@ from ..schemas.menu_items import MenuItemCreate, MenuItemUpdate
 from sqlalchemy.orm import Session
 from ..dependencies.database import get_db
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/items",
+    tags=["Menu Items"]
+)
 
 @router.post("/menu_items/", response_model=MenuItemCreate, status_code=status.HTTP_201_CREATED)
 def create(menu_item: MenuItemCreate, db: Session = Depends(get_db)):
