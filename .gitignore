@@ -1,5 +1,5 @@
 .idea
 /.venv/
 #api/dependencies/config.py
-__pycache__/
+**/__pycache__/
 *.py[cod]
