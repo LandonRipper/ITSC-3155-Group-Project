@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from ..dependencies.database import Base
 
 
-class MenuItems(Base):
+class MenuItem(Base):
     __tablename__ = "menu_items"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)

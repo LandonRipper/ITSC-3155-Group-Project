@@ -1,6 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Text, CheckConstraint
 from sqlalchemy.orm import relationship
 from ..dependencies.database import Base
+from .menu_items import MenuItem
 
 class Feedback(Base):
     __tablename__ = 'feedback'

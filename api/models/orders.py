@@ -1,3 +1,4 @@
+from .customer import Customer
 from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -16,4 +17,4 @@ class Order(Base):
 
     customer_id = Column(Integer, ForeignKey("customers.id"))
     customer = relationship("Customer", back_populates="orders")
-    payment = relationship("Payment", back_populates="orders", uselist=False)
+    payment = relationship("Payment", back_populates="order", uselist=False)
