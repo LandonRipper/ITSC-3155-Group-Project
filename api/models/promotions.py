@@ -5,12 +5,12 @@ from ..dependencies.database import Base
 
 
 class Promotion(Base):
-    __tablename__ = "Promotions"
+    __tablename__ = "promotions"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    promotion_id = Column(Integer, ForeignKey("Promotions.id"))
-    promotion_name = Column(String, ForeignKey("promotions.name"))
-    exp_date = Column(Integer, ForeignKey("promotions.exp_date"))
+    promotion_id = Column(Integer, ForeignKey("promotions.id"))
+    promotion_name = Column(String(50), unique=True, nullable=False)
+    exp_date = Column(Integer, nullable=False)
     
 
     
