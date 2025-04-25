@@ -9,4 +9,4 @@ def load_routes(app):
     #app.include_router(feedback.router)
     #app.include_router(promotions.router)
     app.include_router(recipes.router)
-    #app.include_router(resources.router)
+    app.include_router(resources.router)
