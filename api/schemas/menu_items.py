@@ -1,10 +1,11 @@
 from typing import Optional
 from pydantic import BaseModel
+from decimal import Decimal
 
 
 class MenuItemBase(BaseModel):
     item_name: str
-    price: float
+    price: Decimal
     calories: Optional[int] = None
     order_category: Optional[str] = None
 
@@ -15,7 +16,7 @@ class MenuItemCreate(MenuItemBase):
 
 class MenuItemUpdate(BaseModel):
     item_name: Optional[str] = None
-    price: Optional[float] = None
+    price: Optional[Decimal] = None
     calories: Optional[int] = None
     order_category: Optional[str] = None
 
@@ -23,5 +24,6 @@ class MenuItemUpdate(BaseModel):
 class MenuItem(MenuItemBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
+

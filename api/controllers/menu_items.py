@@ -1,34 +1,56 @@
-from fastapi import APIRouter
 from sqlalchemy.orm import Session
-from ..models.menu_items import MenuItem
-from ..schemas.menu_items import MenuItemCreate, MenuItemUpdate
-from sqlalchemy import exc
+from fastapi import HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
+from ..models import menu_items as model
+from ..schemas import menu_items as schema
 
-def create_menu_item(db: Session, menu_item: MenuItemCreate):
-    db_menu_item = MenuItem(**menu_item.dict())
-    db.add(db_menu_item)
-    db.commit()
-    db.refresh(db_menu_item)
-    return db_menu_item
 
-def get_menu_item(db: Session, menu_item_id: int):
-    return db.query(MenuItem).filter(MenuItem.id == menu_item_id).first()
-
-def get_menu_items(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(MenuItem).offset(skip).limit(limit).all()
-
-def update_menu_item(db: Session, menu_item_id: int, menu_item: MenuItemUpdate):
-    db_menu_item = db.query(MenuItem).filter(MenuItem.id == menu_item_id).first()
-    if db_menu_item:
-        for key, value in menu_item.dict(exclude_unset=True).items():
-            setattr(db_menu_item, key, value)
+def create(db: Session, request: schema.MenuItemCreate):
+    new_item = model.MenuItem(**request.dict())
+    try:
+        db.add(new_item)
         db.commit()
-        db.refresh(db_menu_item)
-    return db_menu_item
+        db.refresh(new_item)
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=400, detail=str(e.__dict__['orig']))
+    return new_item
 
-def delete_menu_item(db: Session, menu_item_id: int):
-    db_menu_item = db.query(MenuItem).filter(MenuItem.id == menu_item_id).first()
-    if db_menu_item:
-        db.delete(db_menu_item)
+
+def read_all(db: Session):
+    try:
+        return db.query(model.MenuItem).all()
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=400, detail=str(e.__dict__['orig']))
+
+
+def read_one(db: Session, item_id: int):
+    try:
+        item = db.query(model.MenuItem).filter(model.MenuItem.id == item_id).first()
+        if not item:
+            raise HTTPException(status_code=404, detail="Menu item not found")
+        return item
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=400, detail=str(e.__dict__['orig']))
+
+
+def update(db: Session, item_id: int, request: schema.MenuItemUpdate):
+    try:
+        item = db.query(model.MenuItem).filter(model.MenuItem.id == item_id)
+        if not item.first():
+            raise HTTPException(status_code=404, detail="Menu item not found")
+        item.update(request.dict(exclude_unset=True), synchronize_session=False)
         db.commit()
-    return db_menu_item
+        return item.first()
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=400, detail=str(e.__dict__['orig']))
+
+
+def delete(db: Session, item_id: int):
+    try:
+        item = db.query(model.MenuItem).filter(model.MenuItem.id == item_id)
+        if not item.first():
+            raise HTTPException(status_code=404, detail="Menu item not found")
+        item.delete(synchronize_session=False)
+        db.commit()
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=400, detail=str(e.__dict__['orig']))
