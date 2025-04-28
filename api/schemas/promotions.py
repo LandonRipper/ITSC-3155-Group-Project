@@ -1,31 +1,26 @@
-from datetime import datetime
+from pydantic import BaseModel, condecimal, constr
+from datetime import date
 from typing import Optional
-from pydantic import BaseModel
-from .orders import Order
 
 
 class PromotionBase(BaseModel):
-    restuarant_id: int
-    description: Optional[str] = "Current Promotions"
+    promotion_name: constr(max_length=50)
+    discount: condecimal(max_digits=2, decimal_places=2, ge=0)
+    exp_date: date
 
 
-class PromoCreate(PromotionBase):
-    promo_id = int
+class PromotionCreate(PromotionBase):
+    pass
 
 
+class PromotionUpdate(BaseModel):
+    promotion_name: Optional[constr(max_length=50)] = None
+    discount: Optional[condecimal(max_digits=2, decimal_places=2, ge=0)] = None
+    exp_date: Optional[date] = None
 
-class PromoUpdate(BaseModel):
-    promo_id : Optional[int] = None
-    description: Optional[str] = None
-    promotion_name: Optional[str] = None
 
-
-class PromoDelete(PromotionBase):
+class Promotion(PromotionBase):
     id: int
-    promo_id: int
 
-class PromoRead(PromotionBase):
-
-
-    class ConfigDict:
-        from_attributes = True
+    class Config:
+        orm_mode = True
