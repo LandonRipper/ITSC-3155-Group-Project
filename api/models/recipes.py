@@ -14,3 +14,6 @@ class Recipe(Base):
 
     item = relationship("MenuItem", back_populates="recipes")
     resource = relationship("Resource", back_populates="recipes")
+
+    item_description = Column(String(255), nullable=True)
+    resource_description = Column(String(255), nullable=True)
