@@ -6,7 +6,12 @@ from ..schemas import menu_items as schema
 
 
 def create(db: Session, request: schema.MenuItemCreate):
-    new_item = model.MenuItem(**request.dict())
+    new_item = model.MenuItem(
+        item_name=request.item_name,
+        price=request.price,
+        calories=request.calories,
+        order_category=request.order_category
+    )
     try:
         db.add(new_item)
         db.commit()

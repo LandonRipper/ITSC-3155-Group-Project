@@ -6,7 +6,10 @@ from ..schemas import resources as schema
 
 
 def create(db: Session, request: schema.ResourceCreate):
-    new_resource = model.Resource(**request.dict())
+    new_resource = model.Resource(
+        item=request.item,
+        amount=request.amount
+    )
     try:
         db.add(new_resource)
         db.commit()
