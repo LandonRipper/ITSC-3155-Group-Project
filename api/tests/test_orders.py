@@ -2,9 +2,9 @@ from fastapi.testclient import TestClient
 from ..controllers import orders as controller
 from ..main import app
 import pytest
-from ..models import orders as model
+from ..schemas.orders import OrderCreate
+from types import SimpleNamespace
 
-# Create a test client for the app
 client = TestClient(app)
 
 
@@ -14,18 +14,16 @@ def db_session(mocker):
 
 
 def test_create_order(db_session):
-    # Create a sample order
     order_data = {
         "customer_name": "John Doe",
         "description": "Test order"
     }
 
-    order_object = model.Order(**order_data)
-
-    # Call the create function
+    order_object = OrderCreate(**order_data)
+    fake_customer = SimpleNamespace(id=1)
+    db_session.query.return_value.filter.return_value.first.return_value = fake_customer
     created_order = controller.create(db_session, order_object)
 
-    # Assertions
     assert created_order is not None
-    assert created_order.customer_name == "John Doe"
+    assert created_order.customer_id == 1
     assert created_order.description == "Test order"
