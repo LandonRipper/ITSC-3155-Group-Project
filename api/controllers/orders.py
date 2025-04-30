@@ -3,6 +3,7 @@ from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
 from ..models import customer as customer_model
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import date
 
 
 def create(db: Session, request):
@@ -71,3 +72,16 @@ def delete(db: Session, item_id):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+def read_by_date_range(db: Session, from_date: date, to_date: date):
+    try:
+        orders = db.query(model.Order).filter(
+            model.Order.order_date.between(from_date, to_date)
+        ).all()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+
+    return orders
+
+

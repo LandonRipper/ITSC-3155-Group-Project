@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, FastAPI, status, Response
+from fastapi import APIRouter, Depends, FastAPI, status, Response, Query
 from sqlalchemy.orm import Session
 from ..controllers import orders as controller
 from ..schemas import orders as schema
 from ..dependencies.database import engine, get_db
+from datetime import date
 
 router = APIRouter(
     tags=['Orders'],
@@ -33,3 +34,11 @@ def update(item_id: int, request: schema.OrderUpdate, db: Session = Depends(get_
 @router.delete("/{item_id}")
 def delete(item_id: int, db: Session = Depends(get_db)):
     return controller.delete(db=db, item_id=item_id)
+
+@router.get("/by-date-range/", response_model=list[schema.Order])
+def read_by_date_range(
+    from_date: date = Query(...),
+    to_date: date = Query(...),
+    db: Session = Depends(get_db)
+):
+    return controller.read_by_date_range(db=db, from_date=from_date, to_date=to_date)
