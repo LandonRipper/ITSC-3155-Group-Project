@@ -2,13 +2,19 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response
 from sqlalchemy.exc import SQLAlchemyError
 from ..models import payments as model
+from ..models.order_details import OrderDetail
 
 
 def create(db: Session, request):
+    order_detail = db.query(OrderDetail).filter(OrderDetail.id == request.order_detail_id).first()
+    if not order_detail:
+        raise HTTPException(status_code=404, detail="Order detail not found")
+
     new_payment = model.Payment(
         card_info=request.card_info,
         transaction_status=request.transaction_status,
         payment_type=request.payment_type,
+        payment_amount=order_detail.price,
         order_id=request.order_id
     )
 
