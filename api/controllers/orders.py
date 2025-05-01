@@ -1,9 +1,12 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
 from ..models import customer as customer_model
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import date
+from ..models import payments as payment_model
+
 
 
 def create(db: Session, request):
@@ -13,8 +16,7 @@ def create(db: Session, request):
 
     new_item = model.Order(
         customer_id=customer.id,
-        description=request.description
-
+        description=request.description,
     )
 
     try:
@@ -84,4 +86,16 @@ def read_by_date_range(db: Session, from_date: date, to_date: date):
 
     return orders
 
+def get_total_revenue_by_date(db: Session, target_date: date):
+    try:
+        total = (
+            db.query(func.sum(payment_model.Payment.payment_amount))
+            .join(model.Order, payment_model.Payment.order_id == model.Order.id)
+            .filter(func.date(model.Order.order_date) == target_date)
+            .scalar()
+        )
+
+        return {"date": target_date, "total_revenue": total or 0}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
