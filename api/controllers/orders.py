@@ -86,7 +86,7 @@ def read_by_date_range(db: Session, from_date: date, to_date: date):
 
     return orders
 
-def get_total_revenue_by_date(db: Session, target_date: date):
+def get_revenue_by_date(db: Session, target_date: date):
     try:
         total = (
             db.query(func.sum(payment_model.Payment.payment_amount))

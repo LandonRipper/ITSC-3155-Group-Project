@@ -42,3 +42,7 @@ def read_by_date_range(
     db: Session = Depends(get_db)
 ):
     return controller.read_by_date_range(db=db, from_date=from_date, to_date=to_date)
+
+@router.get("/by-date")
+def revenue_by_date(target_date: date = Query(...), db: Session = Depends(get_db)):
+    return controller.get_revenue_by_date(db=db, target_date=target_date)
