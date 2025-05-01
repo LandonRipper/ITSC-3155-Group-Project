@@ -3,6 +3,7 @@ from fastapi import HTTPException, status, Response, Depends
 from ..models import order_details as order_model
 from ..models import recipes as recipe_model
 from ..models import resources as resource_model
+from ..models.menu_items import MenuItem
 
 
 
@@ -10,10 +11,14 @@ from sqlalchemy.exc import SQLAlchemyError
 
 
 def create(db: Session, request):
+    menu_item = db.query(MenuItem).filter(MenuItem.id == request.item_id).first()
+    if not menu_item:
+        raise HTTPException(status_code=404, detail="Menu item not found")
     new_item = order_model.OrderDetail(
         order_id=request.order_id,
         item_id=request.item_id,
-        quantity=request.quantity
+        quantity=request.quantity,
+        price=menu_item.price
     )
     try:
         db.add(new_item)
