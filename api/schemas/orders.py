@@ -14,6 +14,8 @@ class OrderCreate(OrderBase):
     customer_name: str
     description: Optional[str] = None
 
+class OrderStatusUpdate(BaseModel):
+    status_of_order: str
 
 class OrderUpdate(BaseModel):
     customer_name: Optional[str] = None
@@ -22,6 +24,7 @@ class OrderUpdate(BaseModel):
 
 class Order(OrderBase):
     id: int
+    status_of_order: str
     order_date: Optional[datetime] = None
     order_details: list[OrderDetail] = None
     customer: Optional[Customer]

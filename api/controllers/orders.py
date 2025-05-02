@@ -6,7 +6,7 @@ from ..models import customer as customer_model
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import date
 from ..models import payments as payment_model
-
+from ..schemas import orders
 
 
 def create(db: Session, request):
@@ -28,6 +28,21 @@ def create(db: Session, request):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
 
     return new_item
+def update_order_status(db: Session, tracking_number: int, update: orders.OrderStatusUpdate):
+    order = db.query(model.Order).filter(model.Order.tracking_number == tracking_number).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    order.status_of_order = update.status_of_order
+    db.commit()
+    db.refresh(order)
+
+    return {"tracking_number": tracking_number, "new_status": order.status_of_order}
+
+def get_order_status(db: Session, tracking_number: int):
+    order = db.query(model.Order).filter(model.Order.tracking_number == tracking_number).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return {"tracking_number": tracking_number, "status": order.status_of_order}
 
 def read_all(db: Session):
     try:

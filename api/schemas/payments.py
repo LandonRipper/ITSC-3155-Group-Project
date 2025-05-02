@@ -5,6 +5,7 @@ class PaymentBase(BaseModel):
     card_info: str
     transaction_status: str
     payment_type: str
+    order_detail_id: int
 
 class PaymentCreate(PaymentBase):
     order_id: int

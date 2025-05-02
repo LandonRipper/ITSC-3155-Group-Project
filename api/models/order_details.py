@@ -10,6 +10,7 @@ class OrderDetail(Base):
     item_id = Column(Integer, ForeignKey("menu_items.id"), nullable=False)
     price = Column(DECIMAL, nullable=False)
     quantity = Column(Integer, nullable=False, index=True)
+    type_of_order = Column(String(300))
 
     item = relationship("MenuItem", back_populates="order_details")
     order = relationship("Order", back_populates="order_details")

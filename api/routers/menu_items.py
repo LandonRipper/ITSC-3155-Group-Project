@@ -33,3 +33,7 @@ def update(item_id: int, request: schema.MenuItemUpdate, db: Session = Depends(g
 @router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete(item_id: int, db: Session = Depends(get_db)):
     controller.delete(db=db, item_id=item_id)
+
+@router.get("/search-by-category/{category}", response_model=list[schema.MenuItem])
+def search_by_category(category: str, db: Session = Depends(get_db)):
+    return controller.get_items_by_category(db, category)

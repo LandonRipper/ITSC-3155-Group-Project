@@ -10,7 +10,7 @@ router = APIRouter(
     tags=['Payments'],
     prefix="/payments"
 )
-@router.post("/payments/", response_model=PaymentCreate, status_code=201)
+@router.post("/payments/", response_model=schema.PaymentCreate, status_code=201)
 def create(request: schema.PaymentCreate, db: Session = Depends(get_db)):
     return controller.create(db=db, request=request)
 

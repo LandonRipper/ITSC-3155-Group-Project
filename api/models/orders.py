@@ -16,7 +16,7 @@ class Order(Base):
     order_date = Column(Date, nullable=False, default=date.today)
     description = Column(String(300))
     tracking_number = Column(Integer, unique=True, nullable=False, default=generate_tracking_number)
-
+    status_of_order = Column(String(300),default="In Progress")
 
     customer_id = Column(Integer, ForeignKey("customers.id"),nullable=False)
     customer = relationship("Customer", back_populates="orders")

@@ -18,7 +18,9 @@ def create(db: Session, request):
         order_id=request.order_id,
         item_id=request.item_id,
         quantity=request.quantity,
+        type_of_order=request.type_of_order,
         price=menu_item.price
+
     )
     try:
         db.add(new_item)
