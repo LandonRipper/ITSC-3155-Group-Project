@@ -8,6 +8,7 @@ class PaymentBase(BaseModel):
 
 class PaymentCreate(PaymentBase):
     order_id: int
+    order_detail_id: int
 
 class PaymentRead(PaymentBase):
     id: int
