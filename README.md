@@ -12,7 +12,7 @@
 ### Test API by built-in docs:
 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
-CONFIG.PY Example
+api/dependencies/CONFIG.PY Example
 class conf:
     db_host = "localhost"
     db_name = "sandwich_maker_api"
