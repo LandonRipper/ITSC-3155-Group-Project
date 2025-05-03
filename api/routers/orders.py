@@ -15,6 +15,10 @@ router = APIRouter(
 def create(request: schema.OrderCreate, db: Session = Depends(get_db)):
     return controller.create(db=db, request=request)
 
+@router.post("/", response_model=schema.Order)
+def create_with_account(request: schema.OrderCreate, db: Session = Depends(get_db)):
+    return controller.create_with_account(db=db, request=request)
+
 
 @router.get("/", response_model=list[schema.Order])
 def read_all(db: Session = Depends(get_db)):
