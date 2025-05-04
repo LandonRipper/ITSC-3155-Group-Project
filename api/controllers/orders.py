@@ -128,3 +128,14 @@ def get_order_status(db: Session, tracking_number: int):
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return {"tracking_number": tracking_number, "status": order.status_of_order}
+
+def get_tracking_number(db: Session, order_id: int):
+    try:
+        order = db.query(model.Order).filter(model.Order.id == order_id).first()
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        return {"order_id": order_id, "tracking_number": order.tracking_number}
+    except SQLAlchemyError as e:
+        error = str(e.__dict__.get("orig", str(e)))
+        raise HTTPException(status_code=400, detail=error)
+

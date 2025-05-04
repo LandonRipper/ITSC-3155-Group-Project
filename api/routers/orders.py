@@ -15,11 +15,15 @@ router = APIRouter(
 def create(request: schema.OrderCreate, db: Session = Depends(get_db)):
     return controller.create(db=db, request=request)
 
-@router.get("/orders/status/{tracking_number}", tags=["Orders"])
+@router.get("/status/find/{order_id}")
+def fetch_tracking_number(order_id: int, db: Session = Depends(get_db)):
+    return controller.get_tracking_number(db, order_id)
+
+@router.get("/status/{tracking_number}", tags=["Orders"])
 def read_status(tracking_number: int, db: Session = Depends(get_db)):
     return controller.get_order_status(db, tracking_number)
 
-@router.put("/orders/status/{tracking_number}", tags=["Orders"])
+@router.put("/status/{tracking_number}", tags=["Orders"])
 def change_status(tracking_number: int, update: schema.OrderStatusUpdate, db: Session = Depends(get_db)):
     return controller.update_order_status(db, tracking_number, update)
 
