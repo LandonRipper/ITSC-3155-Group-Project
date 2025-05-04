@@ -22,8 +22,8 @@ def create(db: Session, request):
 
     return new_item
 
-def create_with_account(db: Session, request):
-    customer = db.query(customer_model.Customer).filter(customer_model.Customer.name == request.customer_name).first()
+def create_with_account(db: Session, request, customer_email: str):
+    customer = db.query(customer_model.Customer).filter(customer_model.Customer.email == customer_email).first()
     if not customer:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found!")
 

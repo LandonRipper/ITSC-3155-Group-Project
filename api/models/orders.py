@@ -18,7 +18,7 @@ class Order(Base):
     tracking_number = Column(Integer, unique=True, nullable=False, default=generate_tracking_number)
 
 
-    customer_id = Column(Integer, ForeignKey("customers.id"),nullable=False)
+    customer_id = Column(Integer, ForeignKey("customers.id"),nullable=True)
     customer = relationship("Customer", back_populates="orders")
 
     order_details = relationship("OrderDetail", back_populates="order")
