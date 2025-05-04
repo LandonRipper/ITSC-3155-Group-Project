@@ -6,6 +6,7 @@ from ..models import customer as customer_model
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import date
 from ..models import payments as payment_model
+from ..schemas import orders
 
 def create(db: Session, request):
     new_item = model.Order(
