@@ -17,7 +17,7 @@ def create(db: Session, request):
         card_info=request.card_info,
         transaction_status=request.transaction_status,
         payment_type=request.payment_type,
-        payment_amount=order_detail.price,
+        payment_amount=order_detail.price*order_detail.quantity,
         order_id=request.order_id,
         order_detail_id=request.order_detail_id
     )
