@@ -2,7 +2,10 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response
 from sqlalchemy.exc import SQLAlchemyError
 from ..models import payments as model
+from ..models import promotions as promo_model
 from ..models.order_details import OrderDetail
+from datetime import date
+from decimal import Decimal
 
 
 def create(db: Session, request):
@@ -75,3 +78,25 @@ def delete(db: Session, payment_id: int):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+def apply_promo(db: Session, payment_id: int, promotion_id: int):
+    try:
+        payment = db.query(model.Payment).filter(model.Payment.id == payment_id).first()
+        if not payment:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Payment ID not found!")
+        promotion = db.query(promo_model.Promotion).filter(promo_model.Promotion.id == promotion_id).first()
+        if not promotion:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Promotion ID not found!")
+        if promotion.exp_date < date.today():
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Promotion has expired.")
+
+        new_amount = payment.payment_amount * (Decimal("1.0") - promotion.discount)
+        payment.payment_amount = new_amount.quantize(Decimal("0.01"))
+
+        db.commit()
+        db.refresh(payment)
+        return payment
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)

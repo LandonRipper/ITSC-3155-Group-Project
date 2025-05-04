@@ -11,13 +11,13 @@ def seed_data(db: Session):
         item_name = "Burger",
         price = 8.99,
         calories = 800,
-        order_category = "Grass Fed"
+        order_category = "Entree"
     )
     salad = MenuItem(
         item_name = "Salad",
         price = 7.99,
         calories = 600,
-        order_category = "Vegatarian"
+        order_category = "Entree"
     )
     #RESOURCES
     bread = Resource(

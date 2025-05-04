@@ -9,8 +9,24 @@ from ..models import payments as payment_model
 from ..schemas import orders
 
 
+
 def create(db: Session, request):
-    customer = db.query(customer_model.Customer).filter(customer_model.Customer.name == request.customer_name).first()
+    new_item = model.Order(
+        description=request.description,
+    )
+
+    try:
+        db.add(new_item)
+        db.commit()
+        db.refresh(new_item)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__["orig"])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+
+    return new_item
+
+def create_with_account(db: Session, request, customer_email: str):
+    customer = db.query(customer_model.Customer).filter(customer_model.Customer.email == customer_email).first()
     if not customer:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found!")
 
