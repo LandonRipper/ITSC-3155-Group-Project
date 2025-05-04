@@ -1,10 +1,12 @@
 from typing import Optional
 from pydantic import BaseModel
+from decimal import Decimal
 
 class PaymentBase(BaseModel):
     card_info: str
     transaction_status: str
     payment_type: str
+    payment_amount: Decimal
 
 class PaymentCreate(PaymentBase):
     order_id: int
