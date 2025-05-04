@@ -112,3 +112,18 @@ def get_revenue_by_date(db: Session, target_date: date):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+def update_order_status(db: Session, tracking_number: int, update: orders.OrderStatusUpdate):
+    order = db.query(model.Order).filter(model.Order.tracking_number == tracking_number).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    order.status_of_order = update.status_of_order
+    db.commit()
+    db.refresh(order)
+
+    return {"tracking_number": tracking_number, "new_status": order.status_of_order}
+
+def get_order_status(db: Session, tracking_number: int):
+    order = db.query(model.Order).filter(model.Order.tracking_number == tracking_number).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return {"tracking_number": tracking_number, "status": order.status_of_order}
